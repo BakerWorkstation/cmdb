@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>安全运维管理平台-资产列表</title>
+<!-- Latest compiled and minified CSS -->
+
+
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap-table.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/buttons.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap-clockpicker.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/fileinput.min.css") }}" />
+
+<style>
+ body {
+        padding-top: 2%;
+        padding-left: 5%;
+        padding-right: 5%;
+}
+</style>
+</head>
+
+<body>
+<script src="{{ static_url("js/jquery.min.js") }}"></script>
+<script src="{{ static_url("js/jquery.freezeheader.js") }}"></script>
+<script src="{{ static_url("js/xlsx.full.min.js") }}"></script>
+<script src="{{ static_url("js/bootstrap.min.js") }}"></script>
+<script src="{{ static_url("js/bootstrap-table.min.js") }}"></script>
+<script src="{{ static_url("js/bootstrap-table-zh-CN.js") }}"></script>
+<script src="{{ static_url("js/bootstrap-table-export.js") }}"></script>
+<script src="{{ static_url("js/FileSaver.min.js") }}"></script>
+<!-- PDF
+<script src="{{ static_url("js/pdfmake.min.js") }}"></script>
+<script src="{{ static_url("js/vfs_fonts.js") }}"></script>
+<script src="{{ static_url("js/jspdf.min.js") }}"></script>
+<script src="{{ static_url("js/jspdf.plugin.autotable.js") }}"></script>
+-->
+<script src="{{ static_url("js/fileinput.min.js") }}"></script>
+<script src="{{ static_url("js/tableExport.js") }}"></script>
+<script src="{{ static_url("js/bootstrap-clockpicker.min.js") }}"></script>
+
+<body background="{{ static_url("images/banner_home.jpg")}}">
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">上传Excel(.xlsx)文件</h4>
+            </div>
+            <div class="modal-body">
+                <input type="file" name="my" class="file" id="aaa"  data-show-upload="true" data-show-caption="true" />
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <!--<button type="button" class="btn btn-primary">提交更改</button>-->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div id="toolbar">  
+    <div class="btn-group">  
+        <!-- 按钮触发模态框 -->
+        <button class="btn btn-default"  data-toggle="modal" data-target="#myModal">  
+            <i class="glyphicon glyphicon-plus"></i>  
+        </button>  
+        <button class="btn btn-default" onclick="choose()">  
+            <i class="glyphicon glyphicon-trash"></i>  
+        </button>
+    </div>  
+</div> 
+
+<div class="col-xs-8" style="text-align:left">
+</div>
+
+<div class="col-xs-4" style="text-align:right">
+</div>
+
+<div class="col-xs-12">
+    <table class="table-responsive" id="table"></table>
+</div>
+</body>
+<script>
+var table = $('#table').bootstrapTable({
+    url: '/checklistdata',
+    method: 'get',
+    queryParamsType: '',
+    toolbar: '#toolbar',
+    dataType: "json",
+    dataField: "rows",
+    cache: false,
+    undefinedText: "",
+    showColumns: true,
+    pagination: true, //分页
+    pageNumber: 1,
+    pageList: [10, 20, 50],
+    pageSize: 10,
+    singleSelect: false,
+    //showToggle: true,
+    exportTypes:['xlsx', 'json', 'txt', 'sql', 'doc'],
+    exportOptions:{  
+        ignoreColumn: [0,1],  //忽略某一列的索引  
+        fileName: '资产管理系统表格',  //文件名称设置  
+        worksheetName: '正宇控股集团2017网络设备统计表',  //表格工作区名称  
+        tableName: '资产记录',  
+        excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+    },
+    showRefresh: true,
+    showExport: true,
+    sidePagination: "server", //服务端处理分页
+    exportDataType: "all", //all, basic
+    showPaginationSwitch: true,
+    striped: true,
+    search: true, //显示搜索框
+    //strictSearch: true,
+    clickToSelect: true,
+    smartDisplay: true,
+    locale:"zh-US" , //表格汉化
+    formatSearch: function (){
+        return '搜索';
+    },
+    // queryParams : function (params) {
+    //    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+    //     var temp = {   
+    //         rows: params.limit,                         //页面大小
+    //         page: (params.offset / params.limit) + 1,   //页码
+    //         sort: params.sort,      //排序列名  
+    //         sortOrder: params.order //排位命令（desc，asc） 
+    //     };
+    //     return temp;
+    // },
+    onPageChange: function(number, size){
+        //queryParams.search=number;
+        //alert(1);
+        $("#table").bootstrapTable('refresh');
+    },
+
+    rowStyle: function (row, index) {
+                //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
+                var strclass = "";
+                var count = parseInt(row.num);
+                yshu = count%4;
+                //console.log(yshu);
+                if (yshu  == 0) {
+                    strclass = 'success';//还有一个active
+                }
+                else if (yshu == 1) {
+                    strclass = 'danger';
+                }
+                else if (yshu == 2) {
+                    strclass = 'warning';
+                }
+                else if (yshu == 3) {
+                    strclass = 'info';
+                }
+                else {
+                    return {};
+                }
+                return { classes: strclass }
+                },
+    columns: [{
+       field: 'state',
+       checkbox: true   
+    }, {
+        field: 'num',
+        title: 'ID',
+        sortable:true,
+        valign: 'middle',
+        align: 'center'
+    }, {
+        field: 'aid',
+        title: '资产编号',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+        formatter: 'infoFormatterName'
+    }, {
+        field: 'dtype',
+        title: '资产类型',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'model',
+        title: '规格型号',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'date',
+        title: '购入日期',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'dpart',
+        title: '使用部门',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'personname',
+        title: '使用人',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'lid',
+        title: 'Login ID',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'pcname',
+        title: '计算机名',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'pcid',
+        title: '机身编号',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'mac',
+        title: 'MAC地址',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'ticketid',
+        title: '签字单据号',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'comment',
+        title: '资产备注',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }, {
+        field: 'count',
+        title: '数量',
+        sortable:true,
+        valign: 'middle',
+        align: 'center',
+    }//, {
+     //   field: 'ctime',
+     //   title: '录入时间',
+     //   sortable:true,
+     //   valign: 'middle',
+     //   align: 'center'
+    //}, {
+    //    field: 'mtime',
+    //    title: '更新时间',
+    //    sortable:true,
+    //    valign: 'middle',
+    //    align: 'center'
+    //}
+    ]
+});
+
+function choose()
+{
+     var chose = table.bootstrapTable('getSelections');
+     var order = new Array();
+     for (i in chose){
+         order[i] = chose[i]["num"]
+     }
+     if (order.length == 0){
+     return ;
+}
+     var dic = new Array();
+     dic = {
+           "order": order
+                                }
+     data = JSON.stringify(dic);
+     var url = "/delete?data=" + data;
+     var req = new XMLHttpRequest();
+     req.open("GET", url);
+     req.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+     req.onreadystatechange = function() {
+     if(req.readyState == 4 && req.status == 200) {
+         res = eval('[' + req.responseText + ']')[0];
+         window.parent.location.href="/menu?show=CMDBManage";
+     }
+     }
+     req.send(null);
+}
+
+function infoFormatterName(value, row, index) {
+	return '<a href=/detail?aid=' + row.aid + ' target="_blank">' + row.aid + '</a>';
+}
+
+
+//上传文件
+  Initfileinput = function (uploadurl){
+      $("#aaa").fileinput({
+          //uploadUrl: "../fileinfo/save", // server upload action
+          uploadUrl:"/uploadExcel",
+          required: true,
+          showBrowse: true,
+          showCaption: true,
+          showPreview: false,
+          browseOnZoneClick: true,
+          dropZoneEnabled: false,
+          allowedFileExtensions: ["xls", "xlsx"],//只能选择xls,和xlsx格式的文件提交
+          //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+          layoutTemplates:{ actionUpload:''},
+          /*上传成功之后运行*/
+          fileuploaded:$("#aaa").on("fileuploaded", function (event, data, previewId, index) {
+              var flag = data.response["flag"];
+              if(flag == "error"){
+                  var result = data.response["result"];
+                  alert(result);
+              }
+              window.parent.location.href="/menu?show=CMDBManage";
+          //    var a = document.getElementById('aaa').value;
+          //    console.log(a);
+          //    $.ajax({
+          //        type:"post",
+          //        async:false,
+          //        url:"https://localhost:8080/GD/UploadAction_add.action",
+          //        data:{
+          //            "filepath.path" : a
+          //        },
+          //       dataType:"json",
+          //        success:function () {
+          //            console.log("添加成功");
+          //        }
+          //    })
+          }),
+          /*上传出错误处理*/
+          //fileerror:$('#aaa').on('fileerror', function(event, data, msg) {
+          //    console.log("Upload failed")
+          //}),
+      });
+  }
+  Initfileinput (); //记得加载，初始化
+
+</script>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $("#table").freezeHeader();
+    })
+</script>
+
+</html>

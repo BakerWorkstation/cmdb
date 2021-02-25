@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>安全运维管理平台-修改密码</title>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("css/normalize.css") }}" />
+	<link rel="stylesheet" type="text/css" href="{{ static_url("css/htmleaf-demo.css") }}" />
+	<link rel="stylesheet" type="text/css" href="{{ static_url("css/buttons.css") }}" />
+        <script src="{{ static_url("js/json2.js") }}"></script>
+	<style type="text/css">
+		body {
+		  background: #060e1b;
+		  overflow: hidden;
+		}
+		.center {
+  			position: fixed;
+  			top: 50%;
+  			left: 50%;
+  			width: 20%;
+  			height: 40%;
+			boxder: 1px;
+			solid: #ccc;
+			background:#000;
+			background: rgba(0, 0, 0, 0.3);
+-webkit-transform: translateX(-50%) translateY(-50%);
+}
+		.child{
+  			display:block;
+			margin: 0 auto;
+			filter:alpha(opacity:100); opacity:1;  -moz-opacity:1; -khtml-opacity: 1;
+		}
+		input{
+			transition:all 0.30s ease-in-out;
+			-webkit-transition: all 0.30s ease-in-out;
+			-moz-transition: all 0.30s ease-in-out;
+
+			border:#35a5e5 1px solid;
+			border-radius:3px;
+			outline:none;
+		}
+		input:focus{
+			box-shadow:0 0 5px rgba(81, 203, 238, 1);
+			-webkit-box-shadow:0 0 5px rgba(81, 203, 238, 1);
+			-moz-box-shadow:0 0 5px rgba(81, 203, 238, 1);
+		}
+	</style>
+
+</head>
+<body>
+	<div class="htmleaf-container">
+		<header class="htmleaf-header">
+
+		<div  class="center" >
+			<div class="child">
+				<form class="form-horizontal">
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										用户名&nbsp;&nbsp;
+									</span>
+					                                   <input class="button button-glow button-border button-rounded button-primary"
+										  type="text" id="username" name="username" class="form-control" placeholder="请输入..." />
+								</div>
+							</div>
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										原密码&nbsp;&nbsp;
+									</span>
+					                                   <input class="button button-glow button-border button-rounded button-primary"
+										  type="text" id="oldpw" name="oldpw" class="form-control" placeholder="请输入..." />
+								</div>
+							</div>
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										新密码&nbsp;&nbsp;
+									</span>
+                                   					<input class="button button-glow button-border button-rounded button-primary"
+										  type="text" id="newpw" name="newpw" class="form-control" placeholder="密  码" />
+								</div>
+							</div>
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										新密码&nbsp;&nbsp;
+									</span>
+                                   					<input class="button button-glow button-border button-rounded button-primary"
+										  type="password" id="renewpw" name="renewpw" class="form-control" placeholder="再次输入" />
+								</div>
+							</div>
+
+							<div class="form-group" style="margin-top: 8% ">
+								<a href="/login" class="button button-glow button-border button-rounded button-primary button-small">返  回</a> 
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<a  class="button button-glow button-border button-rounded button-primary button-small" onclick="changepw()">提  交</a>
+		                    </div>
+
+		                    </form>
+			</div>
+		</div>
+		</header>
+
+		<canvas id="canvas"></canvas>
+
+	</div>
+
+
+	<script type="text/javascript">
+		"use strict";
+		var canvas = document.getElementById('canvas'),
+		  ctx = canvas.getContext('2d'),
+		  w = canvas.width = window.innerWidth,
+		  h = canvas.height = window.innerHeight,
+		    
+		  hue = 217,
+		  stars = [],
+		  count = 0,
+		  maxStars = 1400;
+
+		// Thanks @jackrugile for the performance tip! http://codepen.io/jackrugile/pen/BjBGoM
+		// Cache gradient
+		var canvas2 = document.createElement('canvas'),
+		    ctx2 = canvas2.getContext('2d');
+		    canvas2.width = 100;
+		    canvas2.height = 100;
+		var half = canvas2.width/2,
+		    gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
+		    gradient2.addColorStop(0.025, '#fff');
+		    gradient2.addColorStop(0.1, 'hsl(' + hue + ', 61%, 33%)');
+		    gradient2.addColorStop(0.25, 'hsl(' + hue + ', 64%, 6%)');
+		    gradient2.addColorStop(1, 'transparent');
+
+		    ctx2.fillStyle = gradient2;
+		    ctx2.beginPath();
+		    ctx2.arc(half, half, half, 0, Math.PI * 2);
+		    ctx2.fill();
+
+		// End cache
+
+		function random(min, max) {
+		  if (arguments.length < 2) {
+		    max = min;
+		    min = 0;
+		  }
+		  
+		  if (min > max) {
+		    var hold = max;
+		    max = min;
+		    min = hold;
+		  }
+
+		  return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		var Star = function() {
+
+		  this.orbitRadius = random(w / 2 - 50);
+		  this.radius = random(100, this.orbitRadius) / 10;
+		  this.orbitX = w / 2;
+		  this.orbitY = h / 2;
+		  this.timePassed = random(0, maxStars);
+		  this.speed = random(this.orbitRadius) / 100000;
+		  this.alpha = random(2, 10) / 10;
+
+		  count++;
+		  stars[count] = this;
+		}
+
+		Star.prototype.draw = function() {
+		  var x = Math.sin(this.timePassed + 1) * this.orbitRadius + this.orbitX,
+		      y = Math.cos(this.timePassed) * this.orbitRadius/2 + this.orbitY,
+		      twinkle = random(10);
+
+		  if (twinkle === 1 && this.alpha > 0) {
+		    this.alpha -= 0.05;
+		  } else if (twinkle === 2 && this.alpha < 1) {
+		    this.alpha += 0.05;
+		  }
+
+		  ctx.globalAlpha = this.alpha;
+		    ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
+		  this.timePassed += this.speed;
+		}
+
+		for (var i = 0; i < maxStars; i++) {
+		  new Star();
+		}
+
+		function animation() {
+		    ctx.globalCompositeOperation = 'source-over';
+		    ctx.globalAlpha = 0.8;
+		    ctx.fillStyle = 'hsla(' + hue + ', 64%, 6%, 1)';
+		    ctx.fillRect(0, 0, w, h)
+		  
+		  ctx.globalCompositeOperation = 'lighter';
+		  for (var i = 1, l = stars.length; i < l; i++) {
+		    stars[i].draw();
+		  };  
+		  
+		  window.requestAnimationFrame(animation);
+		}
+
+		animation();
+	</script>
+	<script>
+		function changepw(){
+	           //username
+	           var username = document.getElementById("username").value;
+	           //old password
+	           var oldpw = document.getElementById("oldpw").value;
+		   //new password 
+	           var newpw = document.getElementById("newpw").value;
+		   // re new password
+	           var renewpw = document.getElementById("renewpw").value;
+           
+        	   var dic = new Array();
+		   dic = {
+	                  "username": username,
+                	  "oldpw": oldpw,
+                	  "newpw": newpw,
+                	  "renewpw": renewpw
+					       }
+		    data = JSON.stringify(dic);
+                    var url = "/cpasswddata?data=" + data;
+                    var req = new XMLHttpRequest();
+                    req.open("GET", url);
+                    req.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+                    req.onreadystatechange = function() {
+                    if(req.readyState == 4 && req.status == 200) {
+                        res = eval('[' + req.responseText + ']')[0];
+                        data = res;
+                        if (data["result"]=="true"){
+                            alert("修改成功");
+                            window.location.href="/login";
+                        }
+                        else if(data["result"]=="false"){
+                            alert(data["message"]);
+                        }
+                        }
+                    }
+                    req.send(null);
+
+		}
+	</script>
+
+</body>
+</html>

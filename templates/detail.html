@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>安全运维管理平台-资产详情</title>
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap-combined.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/buttons.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/lanren.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap-datetimepicker.min.css") }}" />
+    <script src="{{ static_url("js/jquery.min.js") }}"></script>
+    <script src="{{ static_url("js/bootstrap.min.js") }}"></script>
+    <script src="{{ static_url("js/json2.js") }}"></script>
+    <script src="{{ static_url("js/bootstrap-datetimepicker.js") }}"></script>
+    <script src="{{ static_url("js/bootstrap-datetimepicker.zh-CN.js") }}"></script>
+
+<style>
+ body {
+        //padding-top: 1%;
+        padding-left: 30%;
+        padding-right: 30%;
+}
+</style>
+</head>
+<body>
+
+<div class="lanren">
+    <div class="ribbon-lanren-green"><div class="ribbon-green">资产详情</div></div>
+
+<!-- <h4 class="text-warning text-center" style="font-size:28px;margin-top: 5%">资产详情</h4></p> -->
+<div style="text-align:left;padding-left: 10%; padding-top: 5%">
+    <a  style="font-size:16px;"  class="button button-glow button-border button-rounded button-highlight" onclick="edit()">编  辑</a>
+</div>
+
+<div class="container-fluid">
+        <div class="row-fluid">
+                <div class="span6" >
+			<p class="text-center" style="font-size:24px;margin-top:5%">资产编号</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%" hidden>资产描述</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">资产类型</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">规格型号</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">购入日期</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">使用部门</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">使用人</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">Login ID</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">计算机名</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">机身编号</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">MAC地址</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">签字单据号</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">资产备注</p>
+			<p class="text-center" style="font-size:24px;margin-top:5%">数量</p>
+		</div>
+                <div class="span6" >
+                         <input class="form-control" id="asset_id" name="asset_id" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="des" name="des" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" type="hidden">
+                         <select class="form-control" id="asset_type" name="asset_type" style="color:blue;margin-top:5%" disabled="disabled">
+                               <option>请选择</option>
+                         </select>
+
+                         <input class="form-control" id="model" name="model" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+	 		 <input class="form_datetime form-control" id="buy_date" name="buy_date" style="color:blue;margin-top:5%" disabled="disabled">
+
+                         <input class="form-control" id="depart" name="depart" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="personname" name="personname" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="lid" name="lid" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="pcname" name="pcname" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="pcid" name="pcid" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="mac" name="mac" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="ticketid" name="ticketid" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="comment" name="comment" placeholder="字母或数字" style="color:blue;margin-top:5%" disabled="disabled" >
+                         <input class="form-control" id="count" name="count" placeholder="数字" style="color:blue;margin-top:5%" disabled="disabled" >
+		</div>
+	</div>
+</div>
+
+<div style="text-align:center;margin-top:2%">
+	<a  style="font-size:16px;pointer-events:none" id="update" name="update"  class="button button-glow button-border button-rounded button-highlight " onclick="update()" >更  新</a>
+</div>
+</br>
+</div>
+
+</body>
+<script>
+function getData(tid){
+        var host = window.location.host;
+        var ws = new WebSocket("ws://" + host + "/devicetype");
+        ws.onopen = function() {
+            var data = "GETTYPE";
+            //dic = {"data": "GETTYPE"}
+            //data = JSON.stringify(dic);
+            ws.send(data);
+        };
+
+        ws.onmessage = function (evt) {
+            var data = JSON.parse(evt.data);
+            var typelist = data["data"];
+            var obj=document.getElementById('asset_type');
+            var num = "";
+            for (var i=0;i<typelist.length;i++){
+                if (typelist[i] == tid){
+                    num = i + 1;
+                }
+                obj.options.add(new Option(typelist[i],"value"));
+            }
+            obj.options[num].selected="selected";
+        };
+        $(".form_datetime").datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true,
+            showMeridian: true,
+            pickerPosition: "bottom-left",
+            language: 'zh-CN',//中文，需要引用zh-CN.js包
+            startView: 2,//月视图
+            minView: 2//日期时间选择器所能够提供的最精确的时间选择视图
+        });
+}
+
+function detaildata(){
+        var host = window.location.host;
+        var ws = new WebSocket("ws://" + host + "/detaildata");
+        ws.onopen = function() {
+            dic = {"aid": "{{aid}}"}
+            data = JSON.stringify(dic);
+            ws.send(data);
+        };
+
+        ws.onmessage = function (evt) {
+            var data = JSON.parse(evt.data);
+            var aid = data["aid"];
+            var des = data["des"];
+            var tid = data["tid"];
+            var model = data["model"];
+            var buy_date = data["buy_date"];
+            var depart = data["depart"];
+            var personname = data["personname"];
+            var lid = data["lid"];
+            var pcname = data["pcname"];
+            var pcid = data["pcid"];
+            var mac = data["mac"];
+            var ticketid = data["ticketid"];
+            var comment = data["comment"];
+            var count = data["count"];
+      
+            document.getElementById('asset_id').value = aid;
+            document.getElementById('des').value = des;
+            document.getElementById('model').value = model;
+            document.getElementById('buy_date').value = buy_date;
+            document.getElementById('depart').value = depart;
+            document.getElementById('personname').value = personname;
+            document.getElementById('lid').value = lid;
+            document.getElementById('pcname').value = pcname;
+            document.getElementById('pcid').value = pcid;
+            document.getElementById('mac').value = mac;
+            document.getElementById('ticketid').value = ticketid;
+            document.getElementById('comment').value = comment;
+            document.getElementById('count').value = count;
+            //document.getElementById('asset_type').value = tid;
+	    getData(tid);
+        };
+}
+function edit(){
+            document.getElementById('asset_id').disabled=false;
+            document.getElementById('des').disabled=false;
+            document.getElementById('asset_type').disabled=false;
+            document.getElementById('model').disabled=false;
+            document.getElementById('buy_date').disabled=false;
+            document.getElementById('depart').disabled=false;
+            document.getElementById('personname').disabled=false;
+            document.getElementById('lid').disabled=false;
+            document.getElementById('pcname').disabled=false;
+            document.getElementById('pcid').disabled=false;
+            document.getElementById('mac').disabled=false;
+            document.getElementById('ticketid').disabled=false;
+            document.getElementById('comment').disabled=false;
+            document.getElementById('count').disabled=false;
+            document.getElementById('update').style="pointer-events:auto";
+}
+function update(){
+        var oldaid = window.location.search.replace("?aid=","");
+	var host = window.location.host;
+	var ws = new WebSocket("ws://" + host + "/update");
+	ws.onopen = function() {
+	        var asset_id = document.getElementById("asset_id").value;
+	        var asset_des = document.getElementById("des").value;
+		var obj = document.getElementById("asset_type");
+	        var index = obj.selectedIndex; // 选中索引
+        	var asset_type = obj.options[index].text; // 选中文本
+	        var model = document.getElementById("model").value;
+	        var buy_date = document.getElementById("buy_date").value;
+        	var depart = document.getElementById("depart").value;
+	        var personname = document.getElementById("personname").value;
+
+        	var lid = document.getElementById("lid").value;
+	        var pcname = document.getElementById("pcname").value;
+        	var pcid = document.getElementById("pcid").value;
+	        var mac = document.getElementById("mac").value;
+	        var ticketid = document.getElementById("ticketid").value;
+	        var comment = document.getElementById("comment").value;
+        	var count = document.getElementById("count").value;
+
+                var dic = {
+                   "oldaid": oldaid,
+                   "asset_id": asset_id,
+                   "asset_des": asset_des,
+                   "asset_type": asset_type,
+                   "model": model,
+                   "buy_date": buy_date,
+                   "depart": depart,
+                   "personname": personname,
+                   "lid": lid,
+                   "pcname": pcname,
+                   "pcid": pcid,
+                   "mac": mac,
+                   "ticketid": ticketid,
+                   "comment": comment,
+                   "count": count,
+                  };
+	        data = JSON.stringify(dic);
+		ws.send(data);
+        };
+
+        ws.onmessage = function (evt) {
+            var data = JSON.parse(evt.data);
+            var flag = data["result"]
+            if (flag=="false"){
+                alert(data["message"]);
+            }
+            else if(flag=="true"){
+                var newaid = data["newaid"];
+                window.location.href="/detail?aid=" + newaid;
+            }
+        };
+}
+
+window.onload = function(){
+        detaildata();
+};
+</script>
+</html>

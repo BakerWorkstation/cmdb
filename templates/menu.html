@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>安全运维管理平台</title>
+
+        <!--<link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="{{ static_url("css/bootstrap.min.css") }}" /> 
+	<script src="{{ static_url("js/jquery.min.js") }}"></script>
+	<script src="{{ static_url("js/bootstrap.min.js") }}"></script>
+
+<style>
+ body {
+	padding-top: 50px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.dropdown:hover .dropdown-menu{ display:block;}
+</style>
+
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation" style="background-image: linear-gradient(to bottom, #2299ee, #2299ee)">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="JavaScript:void(0)" style="font-size: 21px;font-style: oblique; color: #ffffff">安全运维管理平台</a>
+		</div>
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="dropdown" id="CMDB"><a class="dropdown-toggle" style="background-color: #2299ee" data-toggle="dropdown" href="JavaScript:void(0)"><span class="glyphicon glyphicon-star">CMDB<span class="caret"></span></span></a>
+                                     <ul class="dropdown-menu">
+                                             <li>
+                                                     <a href="/menu?show=CMDBManage">资产管理</a>
+                                             </li>
+                                             <li>
+                                                     <a href="/menu?show=CMDBAdd">资产录入</a>
+                                             </li>
+                                     </ul>
+                                </li>
+				<li id="LogSystemli" ><a href="/menu?show=LogSystem" style="background-color: #2299ee"><span class="glyphicon glyphicon-search">日志系统</span></a></li>
+
+				<li id="Securityli" ><a href="/menu?show=Security" style="background-color: #2299ee"><span class="glyphicon glyphicon-warning-sign">安全系统</span></a></li>
+
+				<li class="dropdown" id="Monitorli" ><a class="dropdown-toggle" style="background-color: #2299ee" data-toggle="dropdown" href="JavaScript:void(0)"><span class="glyphicon glyphicon-heart">监控系统<span class="caret"></span></span></a>
+                                     <ul class="dropdown-menu">
+                                             <li>
+                                                     <a href="/menu?show=MonitorHost">监控主机</a>
+                                             </li>
+                                             <li>
+                                                     <a href="/menu?show=MonitorInfo">监控详情</a>
+                                             </li>
+                                     </ul>
+                                </li>
+
+				<li class="dropdown" id="Deployli"><a class="dropdown-toggle" style="background-color: #2299ee" data-toggle="dropdown" href="JavaScript:void(0)"><span class="glyphicon glyphicon-globe">部署系统<span class="caret"></span></span></a>
+                                     <ul class="dropdown-menu">
+                                             <li>
+                                                     <a href="/menu?show=Configuration" >配置</a>
+                                             </li>
+                                             <li>
+                                                     <a href="/menu?show=Install" >安装</a>
+                                             </li>
+                                     </ul>
+                                </li>
+
+				<li id="Knowledgeli" ><a href="/menu?show=reCheck" style="background-color: #2299ee"><span class="glyphicon glyphicon-book">巡检中心</span></a></li>
+				<!--
+				<li id="Knowledgeli" ><a href="/menu?show=Knowledge" style="background-color: #2299ee"><span class="glyphicon glyphicon-book">知识库</span></a></li>
+			</ul> -->
+
+                        <ul class="nav navbar-nav pull-right">
+                                <li class="dropdown" id="Userli">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="JavaScript:void(0)" style="background-color: #2299ee"><span class="glyphicon glyphicon-user">{{username}}<span class="caret"></span></span></a>
+                                        <ul class="dropdown-menu">
+                                                <li>
+                                                        <a href="/menu?show=Userinfo">个人资料</a>
+                                                </li>
+                                                <li class="divider"></li>
+                                                <li><a href="/logout">退出</a></li>
+                                        </ul>
+                                </li>
+                        </ul>
+		</div><!-- /.nav-collapse -->
+	</div><!-- /.container -->
+</div>
+<div >
+        <div class="span12" id="onshow">
+        </div>
+</div>
+</body>
+<script>
+        function CMDBManage() {
+                var id = document.getElementById("onshow");
+                //id.innerHTML = ' <iframe src="/cmdblist"' + ' marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no  height=2150></iframe>';
+                id.innerHTML = ' <iframe src="/cmdblist"' + 'id="mainiframe"  frameBorder=0  width="100%" scrolling=auto onload="changeFrameHeight()"  height=1000></iframe>';
+		$("#CMDB").addClass("active");
+        }
+        function CMDBAdd() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="/cmdbadd"' + ' marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no height=1000 ></iframe>';
+		$("#CMDB").addClass("active");
+        }
+        function LogSystem() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="http://172.17.78.91:5601" ' +
+                'marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no height=1000 ></iframe>';
+		$("#LogSystemli").addClass("active");
+        }
+        function Knowledge(){
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="http://172.17.78.144:8090/login.action?os_username=test123&os_password=qwer1234&os_destination=dashboard.action" ' +
+                'marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no height=1000 ></iframe>';
+		$("#Knowledgeli").addClass("active");
+        }
+        function reCheck(){
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="/checklist" ' +
+                'marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no height=1000 ></iframe>';
+		$("#Knowledgeli").addClass("active");
+        }
+        function  MonitorHost() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="http://172.17.78.91/zabbix/index.php?username=test123&request=hostgroups.php" ' +
+                'marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no height=1000 ></iframe>';
+		$("#Monitorli").addClass("active");
+        }
+        function MonitorInfo() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="http://172.17.78.91/zabbix/index.php?username=test123" ' +
+                'marginWidth=0 marginHeight=0 frameBorder=0 width="100%" scrolling=no height=1000 ></iframe>';
+		$("#Monitorli").addClass("active");
+        }
+        function Security() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="http://172.17.78.147:80/login_signalnode?username=test123" ' +
+                'frameborder="0" scrolling="yes" width="100%" height="800"></iframe>';
+		$("#Securityli").addClass("active");
+        }
+	function Configuration() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="/conf" ' +
+                'frameborder="0" scrolling="yes" width="100%" height="800"></iframe>';
+		$("#Deployli").addClass("active");
+	}
+	function Install() {
+                var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="/install" ' +
+                'frameborder="0" scrolling="yes" width="100%" height="800"></iframe>';
+		$("#Deployli").addClass("active");
+	}
+	function Userinfo(){
+		var id = document.getElementById("onshow");
+                id.innerHTML = ' <iframe src="#" ' +
+                'frameborder="0" scrolling="yes" width="100%" height="800"></iframe>';
+		$("#Userli").addClass("active");
+	}
+
+        function getQueryString(name) {
+            var reg = new RegExp('(^|&)' + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            }
+            return null;
+        }
+        var page = getQueryString('show');
+        if (page == "CMDBManage"){
+            CMDBManage();
+        }
+        else if (page == "CMDBAdd"){
+            CMDBAdd();
+        }
+        else if (page == "LogSystem"){
+            LogSystem();
+        }
+        else if (page == "Knowledge"){
+            Knowledge();
+        }
+        else if (page == "MonitorInfo"){
+            MonitorInfo();      
+        }
+        else if (page == "MonitorHost"){
+            MonitorHost();
+        }
+        else if (page == "Security"){
+            Security();
+        }
+        else if (page == "Configuration"){
+            Configuration();
+        }
+        else if (page == "Install"){
+            Install();
+        }
+        else if (page == "Userinfo"){
+            Userinfo();
+        }
+        else if (page == "reCheck"){
+            reCheck();
+        }
+
+function changeFrameHeight(){
+        var ifm= document.getElementById("mainiframe");
+        ifm.height=document.documentElement.clientHeight-56;
+}
+    //window.onresize=function(){ changeFrameHeight();}
+    //$(function(){changeFrameHeight();});
+</script>
+</html>

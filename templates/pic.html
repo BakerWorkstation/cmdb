@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>add rule system</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!-- Bootstrap 
+  <link rel="stylesheet" href="{{ static_url("css/bootstrap.min.css") }}">
+  <script src="{{ static_url("jquery/jquery.min.js") }}"></script>
+  <script src="{{ static_url("js/bootstrap.min.js") }}"></script>
+  -->
+   <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+   <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+   <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+/*<![CDATA[*/
+ <!--
+ body {background-color:#F0F8FF;}
+ a:link { text-decoration: none;color: black;}
+ a:active { text-decoration:blink; test:expression(target="_blank");}
+ a:hover { text-decoration:underline;color: red}
+ a:visited { text-decoration: none;color: green}
+ a.current level_1:active{ test:expression(target="_self");}
+ a.level_1:active{ test:expression(target="_self");}
+ -->
+
+/*]]>*/
+</style> 
+
+  <style type="text/css">  
+        #bg {  
+            position:fixed;   
+            top:0;   
+            left:0;   
+            width:100%;   
+            height:90%;  
+        }  
+      
+        #bg img {  
+            position:absolute;   
+            left:0;   
+            right:0;   
+            bottom:0;   
+            margin:auto;   
+            width:100%;  
+            height:90%;  
+            z-index:-1;  
+        }  
+        </style>
+</head>
+<body>
+
+<div class="next" style=" text-align:right;">
+    <form action="/logout?logout=1?path=index" method="post">
+    <p>状态:已登录 </p>
+    <input type="submit" style="height:35px;width:100px"  value="登  出"></br>
+    </form>
+</div>
+
+
+    <div class="thumbnail">
+      <img src="{{ static_url("images/20171030/logo.png") }}"  class="img-responsive" alt="Cinque Terre" width="2000" height="700">  
+    </div> 
+                            
+ </body>
+
+</html>

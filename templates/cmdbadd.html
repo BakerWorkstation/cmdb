@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>安全运维管理平台-添加资产</title>
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap-combined.min.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/buttons.css") }}" />
+    <link rel="stylesheet" href="{{ static_url("css/bootstrap-datetimepicker.min.css") }}" />
+    <script src="{{ static_url("js/jquery.min.js") }}"></script>
+    <script src="{{ static_url("js/bootstrap.min.js") }}"></script>
+    <script src="{{ static_url("js/json2.js") }}"></script>
+    <script src="{{ static_url("js/bootstrap-datetimepicker.js") }}"></script>
+    <script src="{{ static_url("js/bootstrap-datetimepicker.zh-CN.js") }}"></script>
+
+<style>
+ body {
+        padding-top: 3%;
+        padding-left: 20%;
+        padding-right: 20%;
+}
+</style>
+</head>
+<body>
+
+<h4 class="text-warning text-center" style="font-size:28px">IT资产信息录入</h4></p>
+
+<div class="container-fluid" style="border:1px solid #CEE2A4;padding-bottom:3%;padding-left:5%;padding-top:2%;margin-top:2%">
+	<div class="row-fluid">
+		<div class="span6">
+		        <div class="input-group" style="width:90%;margin-top:2%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">资产编号</span>
+				<input class="form-control" id="asset_id" name="asset_id" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+                        <!--
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">资产描述</span>
+				<input class="form-control" id="asset_des" name="asset_des" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+                        -->
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">资产类型</span>
+				<!-- <input class="form-control" id="wlid_3" name="wl_domainname" placeholder="字母或数字" style="color:blue"> -->
+	                        <select class="form-control" id="asset_type" name="asset_type" style="color:blue" >
+            		            <option>请选择</option>
+                                </select>
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">规格型号</span>
+				<input class="form-control" id="model" name="model" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">购入日期</span>
+                                <input class="form_datetime form-control" id="buy_date" name="buy_date" style="color:blue">
+
+
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">使用部门</span>
+				<input class="form-control" id="depart" name="depart" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">使用人</span>
+				<input class="form-control" id="personname" name="personname" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">Login ID</span>
+				<input class="form-control" id="loginid" name="loginid" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		</div>
+
+		<div class="span6">
+		        <div class="input-group" style="width:90%;margin-top:2%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">计算机名</span>
+				<input class="form-control" id="pcname" name="pcname" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">机身编号</span>
+				<input class="form-control" id="pcid" name="pcid" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">MAC地址</span>
+				<input class="form-control" id="mac" name="mac" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">签字单据号</span>
+				<input class="form-control" id="ticketid" name="ticketid" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">资产备注</span>
+				<input class="form-control" id="comment" name="comment" placeholder="字母或数字" style="color:blue">
+ 	                </div>
+		        <div class="input-group" style="width:90%;margin-top:5%">
+                   		<span class="input-group-addon" style="width:100px;text-align:left">数量</span>
+				<input class="form-control" id="count" name="count" placeholder="数字" style="color:blue">
+ 	                </div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container-fluid" style="margin-top:5%">
+	<div class="row-fluid">
+		<div class="span12" style="text-align:center">
+			<a  class="button button-glow button-border button-rounded button-primary button-large" style="margin-right:10%" onclick="cancel()" >取  消</a>
+			<a  class="button button-glow button-border button-rounded button-primary button-large" id="submit" name="submit" onclick="AddCmdb()">提  交</a>
+		</div>
+	</div>
+</div>
+
+</body>
+<script>
+function cancel(){
+	//window.location.href="/menu?show=CMDBManage";
+	window.parent.location.href="/menu?show=CMDBManage";
+}
+window.onload = function(){
+        var host = window.location.host;
+        var ws = new WebSocket("ws://" + host + "/devicetype");
+        ws.onopen = function() {
+            var data = "GETTYPE";
+            ws.send(data);
+        };
+        ws.onmessage = function (evt) {
+            var data = JSON.parse(evt.data);
+            var typelist = data["data"];
+            //var typelist = JSON.parse(evt.data);
+	    var obj=document.getElementById('asset_type');
+            for (var i=0;i<typelist.length;i++){
+                obj.options.add(new Option(typelist[i],"value"));
+            }
+        };
+
+    $(".form_datetime").datetimepicker({
+	format: "yyyy-mm-dd",
+	autoclose: true,
+	todayBtn: true,
+	todayHighlight: true,
+	showMeridian: true,
+	pickerPosition: "bottom-left",
+	language: 'zh-CN',//中文，需要引用zh-CN.js包
+	startView: 2,//月视图
+	minView: 2//日期时间选择器所能够提供的最精确的时间选择视图
+    }); 
+}
+
+function AddCmdb(){
+    var host = window.location.host;
+    var ws = new WebSocket("ws://" + host + "/record");
+    ws.onopen = function() {
+        var asset_id = document.getElementById('asset_id').value;
+        //var asset_des = document.getElementById('asset_des').value;
+        var obj = document.getElementById('asset_type');
+        var index = obj.selectedIndex; // 选中索引
+        var asset_type = obj.options[index].text; // 选中文本
+        var model = document.getElementById('model').value;
+        var buy_date = document.getElementById('buy_date').value;
+        var depart = document.getElementById('depart').value;
+        var personname = document.getElementById('personname').value;
+
+        var loginid = document.getElementById('loginid').value;
+        var pcname = document.getElementById('pcname').value;
+        var pcid = document.getElementById('pcid').value;
+        var mac = document.getElementById('mac').value;
+        var ticketid = document.getElementById('ticketid').value;
+        var comment = document.getElementById('comment').value;
+        var count = document.getElementById('count').value;
+
+        var dic = {
+                   "asset_id": asset_id,
+                   //"asset_des": asset_des,
+                   "asset_type": asset_type,
+                   "model": model,
+                   "buy_date": buy_date,
+                   "depart": depart,
+                   "personname": personname,
+                   "loginid": loginid,
+                   "pcname": pcname,
+                   "pcid": pcid,
+                   "mac": mac,
+                   "ticketid": ticketid,
+                   "comment": comment,
+                   "count": count,
+                  };
+         
+        data = JSON.stringify(dic);
+        //alert(data);
+        ws.send(data);
+    };
+    ws.onmessage = function (evt) {
+        var data = JSON.parse(evt.data);
+        var result = data["result"];
+        
+        if (result=="true"){
+            window.parent.location.href="/menu?show=CMDBManage";
+        }
+        else if(result=="false"){
+            alert(data["message"]);
+        }
+    };
+}
+
+$("body").keydown(function(event) {
+    if (event.keyCode == "13") {//keyCode=13是回车键
+        $('#submit').click();
+    }
+});
+</script>
+
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>安全运维管理平台-修改密码</title>
+	<link rel="stylesheet" type="text/css" href="{{ static_url("css/htmleaf-demo.css") }}" />
+	<link rel="stylesheet" type="text/css" href="{{ static_url("css/buttons.css") }}" />
+        <script src="{{ static_url("js/json2.js") }}"></script>
+	<style type="text/css">
+                 body{
+                      background-color:#000044;
+                      background:url("{{ static_url("images/bg.jpg") }}") repeat-x;margin:0px;overflow:hidden;}
+                a{color:#0078ff;}
+
+		.center {
+  			position: fixed;
+  			top: 50%;
+  			left: 50%;
+  			width: 20%;
+  			height: 40%;
+			boxder: 1px;
+			solid: #ccc;
+			background:#000;
+			background: rgba(0, 0, 0, 0.3);
+-webkit-transform: translateX(-50%) translateY(-50%);
+}
+		.child{
+  			display:block;
+			margin: 0 auto;
+			filter:alpha(opacity:100); opacity:1;  -moz-opacity:1; -khtml-opacity: 1;
+		}
+		input{
+			transition:all 0.30s ease-in-out;
+			-webkit-transition: all 0.30s ease-in-out;
+			-moz-transition: all 0.30s ease-in-out;
+
+			border:#35a5e5 1px solid;
+			border-radius:3px;
+			outline:none;
+		}
+		input:focus{
+			box-shadow:0 0 5px rgba(81, 203, 238, 1);
+			-webkit-box-shadow:0 0 5px rgba(81, 203, 238, 1);
+			-moz-box-shadow:0 0 5px rgba(81, 203, 238, 1);
+		}
+	</style>
+
+</head>
+<body onLoad="init()">
+	<div class="htmleaf-container">
+                <header class="htmleaf-header">
+                <div style="margin-top:10%">
+                        <h1 style="">安全运维管理平台-修改密码</h1>
+                </div>
+
+		<div  class="center" >
+			<div class="child">
+				<form class="form-horizontal">
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										用户名&nbsp;&nbsp;
+									</span>
+					                                   <input class="button button-glow button-border button-rounded button-primary"
+										  type="text" id="username" name="username" class="form-control" placeholder="请输入..." />
+								</div>
+							</div>
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										原密码&nbsp;&nbsp;
+									</span>
+					                                   <input class="button button-glow button-border button-rounded button-primary"
+										  type="text" id="oldpw" name="oldpw" class="form-control" placeholder="请输入..." />
+								</div>
+							</div>
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										新密码&nbsp;&nbsp;
+									</span>
+                                   					<input class="button button-glow button-border button-rounded button-primary"
+										  type="text" id="newpw" name="newpw" class="form-control" placeholder="密  码" />
+								</div>
+							</div>
+ 							<div class="form-group">
+								<div class="input-group" style="margin-top: 8%">
+									<span style="color:#1B9AF7">
+										新密码&nbsp;&nbsp;
+									</span>
+                                   					<input class="button button-glow button-border button-rounded button-primary"
+										  type="password" id="renewpw" name="renewpw" class="form-control" placeholder="再次输入" />
+								</div>
+							</div>
+
+							<div class="form-group" style="margin-top: 8% ">
+								<a href="/login" class="button button-glow button-border button-rounded button-primary button-small">返  回</a> 
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<a  class="button button-glow button-border button-rounded button-primary button-small" onclick="changepw()">提  交</a>
+		                    </div>
+
+		                    </form>
+			</div>
+		</div>
+		</header>
+	</div>
+
+
+	<script>
+		function changepw(){
+	           //username
+	           var username = document.getElementById("username").value;
+	           //old password
+	           var oldpw = document.getElementById("oldpw").value;
+		   //new password 
+	           var newpw = document.getElementById("newpw").value;
+		   // re new password
+	           var renewpw = document.getElementById("renewpw").value;
+           
+        	   var dic = new Array();
+		   dic = {
+	                  "username": username,
+                	  "oldpw": oldpw,
+                	  "newpw": newpw,
+                	  "renewpw": renewpw
+					       }
+		    data = JSON.stringify(dic);
+                    var url = "/cpasswddata?data=" + data;
+                    var req = new XMLHttpRequest();
+                    req.open("GET", url);
+                    req.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+                    req.onreadystatechange = function() {
+                    if(req.readyState == 4 && req.status == 200) {
+                        res = eval('[' + req.responseText + ']')[0];
+                        data = res;
+                        if (data["result"]=="true"){
+                            alert("修改成功");
+                            window.location.href="/login";
+                        }
+                        else if(data["result"]=="false"){
+                            alert(data["message"]);
+                        }
+                        }
+                    }
+                    req.send(null);
+
+		}
+	</script>
+<script type="text/javascript" src="{{ static_url("js/ThreeCanvas.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("js/Snow.js") }}"></script>
+<script type="text/javascript">
+
+var SCREEN_WIDTH = window.innerWidth;
+var SCREEN_HEIGHT = window.innerHeight;
+
+var container;
+
+var particle;
+
+var camera;
+var scene;
+var renderer;
+
+var mouseX = 0;
+var mouseY = 0;
+
+var windowHalfX = window.innerWidth / 2;
+var windowHalfY = window.innerHeight / 2;
+
+var particles = []; 
+var particleImage = new Image();//THREE.ImageUtils.loadTexture( "img/ParticleSmoke.png" );
+particleImage.src = "{{ static_url("images/ParticleSmoke.png") }}"; 
+
+
+
+function init() {
+
+	container = document.createElement('div');
+	document.body.appendChild(container);
+
+	camera = new THREE.PerspectiveCamera( 75, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 10000 );
+	camera.position.z = 1000;
+
+	scene = new THREE.Scene();
+	scene.add(camera);
+		
+	renderer = new THREE.CanvasRenderer();
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	var material = new THREE.ParticleBasicMaterial( { map: new THREE.Texture(particleImage) } );
+		
+	for (var i = 0; i < 500; i++) {
+
+		particle = new Particle3D( material);
+		particle.position.x = Math.random() * 2000 - 1000;
+		particle.position.y = Math.random() * 2000 - 1000;
+		particle.position.z = Math.random() * 2000 - 1000;
+		particle.scale.x = particle.scale.y =  1;
+		scene.add( particle );
+		
+		particles.push(particle); 
+	}
+
+	container.appendChild( renderer.domElement );
+
+
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+	document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+	
+	setInterval( loop, 1000 / 60 );
+	
+}
+
+function onDocumentMouseMove( event ) {
+
+	mouseX = event.clientX - windowHalfX;
+	mouseY = event.clientY - windowHalfY;
+}
+
+function onDocumentTouchStart( event ) {
+
+	if ( event.touches.length == 1 ) {
+
+		event.preventDefault();
+
+		mouseX = event.touches[ 0 ].pageX - windowHalfX;
+		mouseY = event.touches[ 0 ].pageY - windowHalfY;
+	}
+}
+
+function onDocumentTouchMove( event ) {
+
+	if ( event.touches.length == 1 ) {
+
+		event.preventDefault();
+
+		mouseX = event.touches[ 0 ].pageX - windowHalfX;
+		mouseY = event.touches[ 0 ].pageY - windowHalfY;
+	}
+}
+
+//
+
+function loop() {
+
+for(var i = 0; i<particles.length; i++)
+	{
+
+		var particle = particles[i]; 
+		particle.updatePhysics(); 
+
+		with(particle.position)
+		{
+			if(y<-1000) y+=2000; 
+			if(x>1000) x-=2000; 
+			else if(x<-1000) x+=2000; 
+			if(z>1000) z-=2000; 
+			else if(z<-1000) z+=2000; 
+		}				
+	}
+
+	camera.position.x += ( mouseX - camera.position.x ) * 0.05;
+	camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
+	camera.lookAt(scene.position); 
+
+	renderer.render( scene, camera );
+
+	
+}
+
+</script>
+
+<div style="text-align:center;clear:both"></div>
+
+</body>
+</html>
